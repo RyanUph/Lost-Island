@@ -11,10 +11,10 @@ function player.load()
     player.grid = anim8.newGrid(48, 48, player.spriteSheet:getWidth(), player.spriteSheet:getHeight())
 
     player.animations = {}
-    player.animations.down = anim8.newAnimation(player.grid('1-7', 4), 0.13)
-    player.animations.up = anim8.newAnimation(player.grid('1-7', 6), 0.13)
-    player.animations.right = anim8.newAnimation(player.grid('1-7', 5), 0.13)
-    player.animations.left = anim8.newAnimation(player.grid('1-7', 7), 0.13)
+    player.animations.down = anim8.newAnimation(player.grid('1-7', 4), 0.1)
+    player.animations.up = anim8.newAnimation(player.grid('1-7', 6), 0.1)
+    player.animations.right = anim8.newAnimation(player.grid('1-7', 5), 0.1)
+    player.animations.left = anim8.newAnimation(player.grid('1-7', 7), 0.1)
     player.animations.attackDown = anim8.newAnimation(player.grid('1-4', 8), 0.07, function() attack = false player.anim = player.animations.down player.anim:gotoFrame(7) end)
     player.animations.attackUp = anim8.newAnimation(player.grid('1-4', 10), 0.07, function() attack = false player.anim = player.animations.up player.anim:gotoFrame(7) end)
     player.animations.attackRight = anim8.newAnimation(player.grid('1-4', 9), 0.07, function() attack = false player.anim = player.animations.right player.anim:gotoFrame(7) end)
@@ -30,6 +30,7 @@ function player.load()
     player.attackHitBox = {x = player.x, y = player.y + 48, w = 50, h = 50}
 
     saveData = {}
+    saveData.healing = 0
     saveData.coins = 0
     saveData.stones = 0
     saveData.sticks = 0

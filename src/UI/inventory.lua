@@ -7,6 +7,13 @@ function inventory.load()
     inventory.panel4 = love.graphics.newImage('sprites/UI/Inventory/InventoryPanel4.png')
     inventory.panel5 = love.graphics.newImage('sprites/UI/Inventory/InventoryPanel5.png')
     inventory.panel6 = love.graphics.newImage('sprites/UI/Inventory/InventoryPanel6.png')
+
+    inventory.sword = love.graphics.newImage('sprites/UI/sword.png')
+    inventory.healing = love.graphics.newImage('sprites/UI/healing.png')
+end
+
+function inventory.update(dt)
+    healingAmount = love.graphics.newText(gameFont, tostring(saveData.healing))
 end
 
 function inventory.draw()
@@ -23,4 +30,11 @@ function inventory.draw()
     elseif player.itemState == 6 then
         love.graphics.draw(inventory.panel6, 285, 1000, nil, 4.5, 4.5, 64, 16)
     end
+
+    -- Sword
+    love.graphics.draw(inventory.sword, 105, 1000, nil, 1.6, 1.6, 16, 16)
+
+    -- Healing potion
+    love.graphics.draw(inventory.healing, 466, 1000, nil, 1.6, 1.6, 16, 16)
+    love.graphics.draw(healingAmount, 487, 1005, nil, 1.5, 1.5)
 end

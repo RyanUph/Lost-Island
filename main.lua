@@ -23,7 +23,7 @@ function love.load()
     -- Collision classes
     world:addCollisionClass('Enemy')
     world:addCollisionClass('Coin')
-    world:addCollisionClass('Player', {ignores = {'Coin'}})
+    world:addCollisionClass('Player', {ignores = {'Coin', 'Enemy'}})
 
     -- Loading
     player.load()
@@ -45,6 +45,7 @@ function love.update(dt)
 
         player.update(dt)
         hud.update(dt)
+        inventory.update(dt)
         resources.update(dt)
     end
 end
@@ -58,8 +59,8 @@ function love.draw()
             gameMap:drawLayer(gameMap.layers['Fences'])
             world:draw()
 
-            player.draw()
             resources.draw()
+            player.draw()
         cam:detach()
 
         hud.draw()
@@ -81,19 +82,21 @@ function love.keypressed(key)
     if key == 'escape' then love.event.quit() end
     if key == 'space' and gameState == 0 then gameState = 1 end
 
-    if key == 'e' and player.anim == player.animations.down and not attack and not isMoving then attack = true end
-    if key == 'e' and player.anim == player.animations.up and not attack and not isMoving then attack = true end
-    if key == 'e' and player.anim == player.animations.right and not attack and not isMoving then attack = true end
-    if key == 'e' and player.anim == player.animations.left and not attack and not isMoving then attack = true end
-
-    if key == 'q' then saveData.coins = saveData.coins + 1 end
-    if key == 'g' and player.health ~= 0 then player.health = player.health - 1 end
-    if key == 'h' then player.health = 5 end
-
     if key == '1' then player.itemState = 1 end
     if key == '2' then player.itemState = 2 end
     if key == '3' then player.itemState = 3 end
     if key == '4' then player.itemState = 4 end
     if key == '5' then player.itemState = 5 end
     if key == '6' then player.itemState = 6 end
+
+    if key == 'q' then saveData.coins = saveData.coins + 1 end
+    if key == 'g' and player.health ~= 0 then player.health = player.health - 1 end
+    if key == 'h' then player.health = 5 end
+end
+
+function love.mousepressed(x, y, button)
+    if button == 1 and player.itemState == 1 and player.anim == player.animations.down and not attack and not isMoving then attack = true end
+    if button == 1 and player.itemState == 1 and player.anim == player.animations.up and not attack and not isMoving then attack = true end
+    if button == 1 and player.itemState == 1 and player.anim == player.animations.right and not attack and not isMoving then attack = true end
+    if button == 1 and player.itemState == 1 and player.anim == player.animations.left and not attack and not isMoving then attack = true end
 end

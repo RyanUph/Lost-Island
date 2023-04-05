@@ -10,6 +10,12 @@ end
 
 function resources.update(dt)
     destroyCoin(dt)
+
+    for i, coin in ipairs(coins) do
+        if distanceBetween(player.x, player.y, coin.x, coin.y) < 30 then
+            coin.dead = true
+        end
+    end
 end
 
 function resources.draw()
@@ -35,10 +41,10 @@ end
 
 function destroyCoin(dt)
     for i = #coins, 1, -1 do
-        local stick = coins[i]
-        if stick.dead == true then
+        local coin = coins[i]
+        if coin.dead == true then
             table.remove(coins, i)
-            stick.collider:destroy()
+            coin.collider:destroy()
             saveData.coins = saveData.coins + 1
         end
     end

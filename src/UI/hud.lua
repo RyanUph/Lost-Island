@@ -16,9 +16,6 @@ end
 
 function hud.update(dt)
     coinsText = love.graphics.newText(gameFont, tostring(saveData.coins))
-
-    playerX = love.graphics.newText(gameFont, tostring(player.collider:getX()))
-    playerY = love.graphics.newText(gameFont, tostring(player.collider:getY()))
 end
 
 function hud.draw()
@@ -27,9 +24,6 @@ function hud.draw()
 
     love.graphics.draw(hud.coin, 50, 116, nil, 5, 5, 8, 8)
     love.graphics.draw(coinsText, 120, 86, nil, 3, 3)
-
-    love.graphics.draw(playerX, 100, 300, nil, 2, 2)
-    love.graphics.draw(playerY, 100, 350, nil, 2, 2)
 
     if player.health == 5 then love.graphics.draw(hud.healthBar1, 210, 56, nil, 5.7, 6, 32, 8) end
     if player.health == 4 then love.graphics.draw(hud.healthBar2, 210, 56, nil, 5.7, 6, 32, 8) end
