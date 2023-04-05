@@ -132,7 +132,7 @@ end
 
 function checkCollisionAttack()
     for i, coin in ipairs(coins) do
-        if checkHitBox(coin) then 
+        if checkHitBox(coin) then
             coin.dead = true
         end
     end
