@@ -1,7 +1,7 @@
 wf = require('libraries/windfield')
 anim8 = require('libraries/anim8')
 camera = require('libraries/camera')
-require('src/Player/player')
+require('src/player')
 require('src/loadMap')
 require('src/resources')
 require('src/UI/inventory')
@@ -22,8 +22,9 @@ function love.load()
     
     -- Collision classes
     world:addCollisionClass('Enemy')
+    world:addCollisionClass('Fire')
     world:addCollisionClass('Coin')
-    world:addCollisionClass('Player', {ignores = {'Coin', 'Enemy'}})
+    world:addCollisionClass('Player', {ignores = {'Coin', 'Fire'}})
 
     -- Loading
     player.load()
@@ -57,7 +58,7 @@ function love.draw()
             gameMap:drawLayer(gameMap.layers['Trees'])
             gameMap:drawLayer(gameMap.layers['Path'])
             gameMap:drawLayer(gameMap.layers['Fences'])
-            world:draw()
+            -- world:draw()
 
             resources.draw()
             player.draw()
@@ -92,6 +93,8 @@ function love.keypressed(key)
     if key == 'q' then saveData.coins = saveData.coins + 1 end
     if key == 'g' and player.health ~= 0 then player.health = player.health - 1 end
     if key == 'h' then player.health = 5 end
+
+    if key == 'j' then saveData.healing = saveData.healing + 1 end
 end
 
 function love.mousepressed(x, y, button)
@@ -99,4 +102,8 @@ function love.mousepressed(x, y, button)
     if button == 1 and player.itemState == 1 and player.anim == player.animations.up and not attack and not isMoving then attack = true end
     if button == 1 and player.itemState == 1 and player.anim == player.animations.right and not attack and not isMoving then attack = true end
     if button == 1 and player.itemState == 1 and player.anim == player.animations.left and not attack and not isMoving then attack = true end
+
+    if button == 1 and player.itemState == 6 and saveData.healing > 0 and player.health > 0 then
+        player.health = 5 saveData.healing = saveData.healing - 1
+    end
 end

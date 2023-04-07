@@ -2,6 +2,7 @@ resources = {}
 
 function resources.load()
     coins = {}
+    fires = {}
 
     createCoin(400, 400)
     createCoin(300, 300)
@@ -9,13 +10,7 @@ function resources.load()
 end
 
 function resources.update(dt)
-    destroyCoin(dt)
-
-    for i, coin in ipairs(coins) do
-        if distanceBetween(player.x, player.y, coin.x, coin.y) < 30 then
-            coin.dead = true
-        end
-    end
+    destroyResource(dt)
 end
 
 function resources.draw()
@@ -25,6 +20,19 @@ function resources.draw()
 end
 
 -- Functions
+
+function createFire(x, y)
+    local fire = {}
+    fire.x = x
+    fire.y = y
+    fire.dead = false
+    fire.w = 24
+    fire.h = 24
+    fire.collider = world:newRectangleCollider(fire.x, fire.y, fire.w, fire.h)
+    fire.collider:setType('static')
+    fire.collider:setCollisionClass('Fire')
+    table.insert(fires, fire)
+end
 
 function createCoin(x, y)
     local coin = {}
@@ -39,7 +47,13 @@ function createCoin(x, y)
     table.insert(coins, coin)
 end
 
-function destroyCoin(dt)
+function destroyResource(dt)
+    for i, coin in ipairs(coins) do
+        if distanceBetween(player.x, player.y, coin.x, coin.y) < 30 then
+            coin.dead = true
+        end
+    end
+
     for i = #coins, 1, -1 do
         local coin = coins[i]
         if coin.dead == true then

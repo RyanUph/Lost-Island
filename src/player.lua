@@ -1,9 +1,11 @@
 require('libraries/anim8')
 player = {}
+boomerangs = {}
 
 function player.load()
     player.x = 400
     player.y = 400
+    player.damage = 1
     player.itemState = 1
     player.speed = 350
     player.health = 5
@@ -30,7 +32,8 @@ function player.load()
     player.attackHitBox = {x = player.x, y = player.y + 48, w = 50, h = 50}
 
     saveData = {}
-    saveData.healing = 0
+    saveData.mana = 0
+    saveData.healing = 1
     saveData.coins = 0
     saveData.stones = 0
     saveData.sticks = 0
@@ -122,6 +125,8 @@ function playerMovement(dt)
     if facingUp and attack then player.attackHitBox = {x = player.x - 24, y = player.y - 98, w = 50, h = 50} player.anim = player.animations.attackUp end
 end
 
+-- Hitbox functions 
+
 function checkHitBox(object)
     if object.x + object.w > player.attackHitBox.x and
     object.y + object.h > player.attackHitBox.y and
@@ -138,3 +143,5 @@ function checkCollisionAttack()
         end
     end
 end
+
+-- Boomerang

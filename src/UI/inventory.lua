@@ -10,10 +10,12 @@ function inventory.load()
 
     inventory.sword = love.graphics.newImage('sprites/UI/sword.png')
     inventory.healing = love.graphics.newImage('sprites/UI/healing.png')
+    inventory.mana = love.graphics.newImage('sprites/UI/mana.png')
 end
 
 function inventory.update(dt)
     healingAmount = love.graphics.newText(gameFont, tostring(saveData.healing))
+    manaAmount = love.graphics.newText(gameFont, tostring(saveData.mana))
 end
 
 function inventory.draw()
@@ -35,6 +37,10 @@ function inventory.draw()
     love.graphics.draw(inventory.sword, 105, 1000, nil, 1.6, 1.6, 16, 16)
 
     -- Healing potion
-    love.graphics.draw(inventory.healing, 466, 1000, nil, 1.6, 1.6, 16, 16)
+    love.graphics.draw(inventory.healing, 466, 1000, nil, 2, 2, 16, 16)
     love.graphics.draw(healingAmount, 487, 1005, nil, 1.5, 1.5)
+
+    -- Mana potion
+    love.graphics.draw(inventory.mana, 393, 1000, nil, 2, 2, 16, 16)
+    love.graphics.draw(manaAmount, 413, 1005, nil, 1.5, 1.5)
 end
