@@ -23,6 +23,9 @@ function player.load()
     player.animations.attackLeft = anim8.newAnimation(player.grid('1-4', 12), 0.07, function() attack = false player.anim = player.animations.left player.anim:gotoFrame(7) end)
     player.anim = player.animations.down
 
+    sprites = {}
+    sprites.boomerang = love.graphics.newImage('sprites/Player/boomerang.png')
+
     facingDown = true
     facingUp = false
     facingRight = false
@@ -37,10 +40,16 @@ function player.load()
     saveData.coins = 0
     saveData.stones = 0
     saveData.sticks = 0
+
+    isThrowed = false
+    boomRot = 0
 end
 
 function player.update(dt)
     playerMovement(dt)
+    boomerangMovement(dt)
+    boomerangRotation(dt)
+    destroyBoomerang(dt)
 end
 
 function player.draw()
@@ -48,6 +57,10 @@ function player.draw()
 
     if attack then
         love.graphics.rectangle('line', player.attackHitBox.x, player.attackHitBox.y, player.attackHitBox.w, player.attackHitBox.h)
+    end
+
+    for i, boomerang in ipairs(boomerangs) do
+        love.graphics.draw(sprites.boomerang, boomerang.x, boomerang.y, boomRot, 4, 4, 8, 8)
     end
 end
 
@@ -144,4 +157,74 @@ function checkCollisionAttack()
     end
 end
 
--- Boomerang
+-- Boomerang functions
+
+function throwBoomerang()
+    local boomerang = {}
+    boomerang.x = player.x
+    boomerang.y = player.y
+    boomerang.speed = 500
+    boomerang.dead = false
+    boomerang.state = 1
+    table.insert(boomerangs, boomerang)
+end
+
+function destroyBoomerang(dt)
+    for i = #boomerangs, 1, -1 do
+        local boomerang = boomerangs[i]
+        local gx, gy = cam:worldCoords(0, 0)
+        local gw, gh = cam:worldCoords(love.graphics.getWidth(), love.graphics.getHeight())
+        if boomerang.x < gx - 10 or boomerang.y < gy - 10 or boomerang.x > gw + 10 or boomerang.y > gh + 10 then
+            table.remove(boomerangs, i)
+            isThrowed = false
+        end
+    end
+end
+
+function boomerangRotation(dt)
+    if isThrowed == true then
+        boomRot = boomRot + 0.1
+    end
+end
+
+function boomerangMovement(dt)
+    for i, boomerang in ipairs(boomerangs) do
+        if distanceBetween(player.x, player.y, boomerang.x, boomerang.y) > 300 then
+            boomerang.state = 2
+        end
+
+        if boomerang.state == 1 and facingDown == true then
+            boomerang.y = boomerang.y + boomerang.speed * dt
+        elseif boomerang.state == 2 and facingDown == true then
+            boomerang.y = boomerang.y - boomerang.speed * dt
+        end
+
+        if boomerang.state == 1 and facingUp == true then
+            boomerang.y = boomerang.y - boomerang.speed * dt
+        elseif boomerang.state == 2 and facingUp == true then
+            boomerang.y = boomerang.y + boomerang.speed * dt
+        end
+
+        if boomerang.state == 1 and facingRight == true then
+            boomerang.x = boomerang.x + boomerang.speed * dt
+        elseif boomerang.state == 2 and facingRight == true then
+            boomerang.x = boomerang.x - boomerang.speed * dt
+        end
+
+        if boomerang.state == 1 and facingLeft == true then
+            boomerang.x = boomerang.x - boomerang.speed * dt
+        elseif boomerang.state == 2 and facingLeft == true then
+            boomerang.x = boomerang.x + boomerang.speed * dt
+        end
+
+        if boomerang.state == 2 and distanceBetween(player.x, player.y, boomerang.x, boomerang.y) < 30 then
+            boomerang.dead = true
+            isThrowed = false
+        end
+    end
+
+    for i = #boomerangs, 1, -1 do
+        local boomerang = boomerangs[i]
+        if boomerang.dead == true then table.remove(boomerangs, i) end
+    end
+end

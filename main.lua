@@ -1,7 +1,7 @@
 wf = require('libraries/windfield')
 anim8 = require('libraries/anim8')
 camera = require('libraries/camera')
-require('src/player')
+require('src/Player/player')
 require('src/loadMap')
 require('src/resources')
 require('src/UI/inventory')
@@ -58,7 +58,7 @@ function love.draw()
             gameMap:drawLayer(gameMap.layers['Trees'])
             gameMap:drawLayer(gameMap.layers['Path'])
             gameMap:drawLayer(gameMap.layers['Fences'])
-            -- world:draw()
+            world:draw()
 
             resources.draw()
             player.draw()
@@ -106,4 +106,6 @@ function love.mousepressed(x, y, button)
     if button == 1 and player.itemState == 6 and saveData.healing > 0 and player.health > 0 then
         player.health = 5 saveData.healing = saveData.healing - 1
     end
+
+    if button == 1 and player.itemState == 2 and isThrowed == false then throwBoomerang() isThrowed = true end
 end
