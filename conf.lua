@@ -1,5 +1,5 @@
 function love.conf(t)
-    t.window.title = "Steve's Adventures"
+    t.window.title = "Lost Island"
     t.window.fullscreen = true
     t.window.resizable = true
 end

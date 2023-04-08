@@ -9,6 +9,7 @@ function inventory.load()
     inventory.panel6 = love.graphics.newImage('sprites/UI/Inventory/InventoryPanel6.png')
 
     inventory.sword = love.graphics.newImage('sprites/UI/sword.png')
+    inventory.boomerang = love.graphics.newImage('sprites/Player/boomerang.png')
     inventory.healing = love.graphics.newImage('sprites/UI/healing.png')
     inventory.mana = love.graphics.newImage('sprites/UI/mana.png')
 end
@@ -33,8 +34,9 @@ function inventory.draw()
         love.graphics.draw(inventory.panel6, 285, 1000, nil, 4.5, 4.5, 64, 16)
     end
 
-    -- Sword
+    -- Weapons
     love.graphics.draw(inventory.sword, 105, 1000, nil, 1.6, 1.6, 16, 16)
+    love.graphics.draw(inventory.boomerang, 178, 1000, nil, 4, 4, 8, 8)
 
     -- Healing potion
     love.graphics.draw(inventory.healing, 466, 1000, nil, 2, 2, 16, 16)
