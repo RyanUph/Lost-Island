@@ -1,4 +1,5 @@
 require('libraries/anim8')
+Timer = require('libraries/timer')
 player = {}
 boomerangs = {}
 
@@ -50,6 +51,10 @@ function player.update(dt)
     boomerangMovement(dt)
     boomerangRotation(dt)
     destroyBoomerang(dt)
+
+    Timer.update(dt)
+
+    boomerangTimer(dt)
 end
 
 function player.draw()
@@ -166,6 +171,12 @@ function throwBoomerang()
     boomerang.speed = 500
     boomerang.dead = false
     boomerang.state = 1
+
+    if facingRight then boomerang.direction = 1 end
+    if facingLeft then boomerang.direction = 2 end
+    if facingDown then boomerang.direction = 3 end
+    if facingUp then boomerang.direction = 4 end
+
     table.insert(boomerangs, boomerang)
 end
 
@@ -187,33 +198,43 @@ function boomerangRotation(dt)
     end
 end
 
+function boomerangTimer(dt)
+    if isThrowed then
+        for i, boomerang in ipairs(boomerangs) do
+            Timer.after(1.2, function ()
+                boomerang.dead = true
+            end)
+        end
+    end
+end
+
 function boomerangMovement(dt)
     for i, boomerang in ipairs(boomerangs) do
         if distanceBetween(player.x, player.y, boomerang.x, boomerang.y) > 300 then
             boomerang.state = 2
         end
 
-        if boomerang.state == 1 and facingDown == true then
+        if boomerang.state == 1 and boomerang.direction == 3 then
             boomerang.y = boomerang.y + boomerang.speed * dt
-        elseif boomerang.state == 2 and facingDown == true then
+        elseif boomerang.state == 2 and boomerang.direction == 3 then
             boomerang.y = boomerang.y - boomerang.speed * dt
         end
 
-        if boomerang.state == 1 and facingUp == true then
+        if boomerang.state == 1 and boomerang.direction == 4 then
             boomerang.y = boomerang.y - boomerang.speed * dt
-        elseif boomerang.state == 2 and facingUp == true then
+        elseif boomerang.state == 2 and boomerang.direction == 4 then
             boomerang.y = boomerang.y + boomerang.speed * dt
         end
 
-        if boomerang.state == 1 and facingRight == true then
+        if boomerang.state == 1 and boomerang.direction == 1 then
             boomerang.x = boomerang.x + boomerang.speed * dt
-        elseif boomerang.state == 2 and facingRight == true then
+        elseif boomerang.state == 2 and boomerang.direction == 1 then
             boomerang.x = boomerang.x - boomerang.speed * dt
         end
 
-        if boomerang.state == 1 and facingLeft == true then
+        if boomerang.state == 1 and boomerang.direction == 2 then
             boomerang.x = boomerang.x - boomerang.speed * dt
-        elseif boomerang.state == 2 and facingLeft == true then
+        elseif boomerang.state == 2 and boomerang.direction == 2 then
             boomerang.x = boomerang.x + boomerang.speed * dt
         end
 
