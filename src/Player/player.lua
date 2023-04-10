@@ -48,13 +48,13 @@ end
 
 function player.update(dt)
     playerMovement(dt)
-    boomerangMovement(dt)
-    boomerangRotation(dt)
-    destroyBoomerang(dt)
 
     Timer.update(dt)
 
     boomerangTimer(dt)
+    boomerangRotation(dt)
+    boomerangMovement(dt)
+    destroyBoomerang(dt)
 end
 
 function player.draw()
@@ -201,9 +201,12 @@ end
 function boomerangTimer(dt)
     if isThrowed then
         for i, boomerang in ipairs(boomerangs) do
-            Timer.after(1.2, function ()
+            if boomerang.state == 1 then
+                Timer.after(1.2, function ()
                 boomerang.dead = true
-            end)
+                boomRot = 0
+                end)
+            end
         end
     end
 end
@@ -246,6 +249,6 @@ function boomerangMovement(dt)
 
     for i = #boomerangs, 1, -1 do
         local boomerang = boomerangs[i]
-        if boomerang.dead == true then table.remove(boomerangs, i) end
+        if boomerang.dead == true then table.remove(boomerangs, i) isThrowed = false end
     end
 end
