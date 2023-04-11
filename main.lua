@@ -1,6 +1,7 @@
 wf = require('libraries/windfield')
 anim8 = require('libraries/anim8')
 camera = require('libraries/camera')
+require('src/shop')
 require('src/Player/player')
 require('src/loadMap')
 require('src/resources')
@@ -21,15 +22,19 @@ function love.load()
     loadMap('gameMap')
     
     -- Collision classes
+    world:addCollisionClass('NPCDop')
+    world:addCollisionClass('NPC', {ignores = {'NPCDop'}})
+
     world:addCollisionClass('Enemy')
     world:addCollisionClass('Fire')
     world:addCollisionClass('Coin')
-    world:addCollisionClass('Player', {ignores = {'Coin', 'Fire'}})
+    world:addCollisionClass('Player', {ignores = {'Coin', 'Fire', 'NPC'}})
 
     -- Loading
     player.load()
     menu.load()
     hud.load()
+    shop.load()
     resources.load()
     inventory.load()
 
@@ -37,6 +42,14 @@ function love.load()
     player.collider = world:newBSGRectangleCollider(400, 500, 40, 75, 5)
     player.collider:setCollisionClass('Player')
     player.collider:setFixedRotation(true)
+
+    shop.collider = world:newBSGRectangleCollider(shop.x - 85, shop.y - 105, 40, 75, 5)
+    shop.collider:setCollisionClass('NPCDop')
+    shop.collider:setType('static')
+    shop.collider:setFixedRotation(true)
+    shop.colliderDop = world:newCircleCollider(shop.x - 65, shop.y - 60, 100)
+    shop.colliderDop:setType('static')
+    shop.colliderDop:setCollisionClass('NPC')
 end
 
 function love.update(dt)
@@ -48,6 +61,7 @@ function love.update(dt)
         hud.update(dt)
         inventory.update(dt)
         resources.update(dt)
+        shop.update(dt)
     end
 end
 
@@ -62,11 +76,17 @@ function love.draw()
 
             resources.draw()
             player.draw()
+            shop.draw()
         cam:detach()
+
+        if isCollided then
+            love.graphics.draw(shop.panel, 600, 875, nil, 3, 3)
+        end
 
         hud.draw()
         inventory.draw()
     end
+
 
     if gameState == 0 then
         menu.draw()
@@ -107,5 +127,5 @@ function love.mousepressed(x, y, button)
         player.health = 5 saveData.healing = saveData.healing - 1
     end
 
-    if button == 1 and player.itemState == 2 and isThrowed == false then throwBoomerang() isThrowed = true end
+    if button == 1 and player.itemState == 2 and isThrowed == false and isMoving == false then throwBoomerang() isThrowed = true end
 end

@@ -8,6 +8,7 @@ function player.load()
     player.y = 400
     player.damage = 1
     player.itemState = 1
+    player.action = 0
     player.speed = 350
     player.health = 5
     player.spriteSheet = love.graphics.newImage('sprites/Player/player.png')
