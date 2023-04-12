@@ -19,19 +19,18 @@ function love.load()
     world = wf.newWorld(0, 0)
     gameState = 0
     gameFont = love.graphics.newFont('fonts/pixel.ttf', 20)
-    world:addCollisionClass('Wall')
-    loadMap('gameMap')
     
     -- Collision classes
-    world:addCollisionClass('Player')--, {ignores = {'Coin', 'Fire', 'NPC'}})
     world:addCollisionClass('NPCDop')
-    world:addCollisionClass('NPC', {ignores = {'Player'}})
-
+    world:addCollisionClass('NPC')--, {ignores = {'Player'}})
+    
     world:addCollisionClass('Enemy')
-    world:addCollisionClass('Fire', {ignores = {'Player'}})
-    world:addCollisionClass('Coin', {ignores = {'Player'}})
+    world:addCollisionClass('Fire')--, {ignores = {'Player'}})
+    world:addCollisionClass('Coin')--, {ignores = {'Player'}})
+    world:addCollisionClass('Player', {ignores = {'Coin', 'Fire', 'NPC'}})
 
     -- Loading
+    loadMap('gameMap')
     player.load()
     menu.load()
     hud.load()
