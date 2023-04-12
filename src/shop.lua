@@ -10,7 +10,7 @@ end
 
 function shop.update(dt)
     collideWithThePlayer(dt)
-    print(player.action)
+    --print(player.action)
 end
 
 function shop.draw()

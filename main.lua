@@ -19,16 +19,17 @@ function love.load()
     world = wf.newWorld(0, 0)
     gameState = 0
     gameFont = love.graphics.newFont('fonts/pixel.ttf', 20)
+    world:addCollisionClass('Wall')
     loadMap('gameMap')
     
     -- Collision classes
+    world:addCollisionClass('Player')--, {ignores = {'Coin', 'Fire', 'NPC'}})
     world:addCollisionClass('NPCDop')
-    world:addCollisionClass('NPC', {ignores = {'NPCDop'}})
+    world:addCollisionClass('NPC', {ignores = {'Player'}})
 
     world:addCollisionClass('Enemy')
-    world:addCollisionClass('Fire')
-    world:addCollisionClass('Coin')
-    world:addCollisionClass('Player', {ignores = {'Coin', 'Fire', 'NPC'}})
+    world:addCollisionClass('Fire', {ignores = {'Player'}})
+    world:addCollisionClass('Coin', {ignores = {'Player'}})
 
     -- Loading
     player.load()
@@ -41,28 +42,65 @@ function love.load()
     -- Colliders 
     player.collider = world:newBSGRectangleCollider(400, 500, 40, 75, 5)
     player.collider:setCollisionClass('Player')
+    --player.collider:setFilterData(1, bit.band(65535, bit.bnot(2)), 0)
+    --player.collider:setCategory(1) -- 1: default
+    --player.collider:setMask(2) -- 2: coin
     player.collider:setFixedRotation(true)
 
     shop.collider = world:newBSGRectangleCollider(shop.x - 85, shop.y - 105, 40, 75, 5)
     shop.collider:setCollisionClass('NPCDop')
+    --shop.collider:setCategory(4)
     shop.collider:setType('static')
     shop.collider:setFixedRotation(true)
     shop.colliderDop = world:newCircleCollider(shop.x - 65, shop.y - 60, 100)
     shop.colliderDop:setType('static')
     shop.colliderDop:setCollisionClass('NPC')
+    --shop.colliderDop:setCategory(3)
+
+    --shop.colliderDop:setPreSolve(function(c1, c2, contact) contact:setEnabled(false) end)
+    
+    acc = 0
 end
 
 function love.update(dt)
     if gameState == 1 then
-        cam:lookAt(player.x, player.y)
         world:update(dt)
-
+        
         player.update(dt)
         hud.update(dt)
         inventory.update(dt)
         resources.update(dt)
         shop.update(dt)
+        cam:lookAt(player.x, player.y)
     end
+    acc = acc + dt
+    if acc > 1 then
+        print(gameState)
+        --dump(player, "")
+        --print(player.state)
+        acc = acc - 1
+    end
+end
+
+local seen={}
+local output = ""
+
+function dump(t,i)
+	seen[t]=true
+	local s={}
+	local n=0
+	for k in pairs(t) do
+		n=n+1 s[n]=k
+	end
+	table.sort(s)
+	for k,v in ipairs(s) do
+		output = output .. tostring(i) .. tostring(v) .."\n"
+		v=t[v]
+		if type(v)=="table" and not seen[v] then
+			dump(v,i.."\t")
+		end
+	end
+    return output
 end
 
 function love.draw()
@@ -100,7 +138,7 @@ function distanceBetween(x1, y1, x2, y2)
 end
 
 function love.keypressed(key)
-    if key == 'escape' then love.event.quit() end
+    if key == 'escape' then love.event.quit("lololol") end
     if key == 'space' and gameState == 0 then gameState = 1 end
 
     if key == '1' then player.itemState = 1 end
@@ -115,6 +153,16 @@ function love.keypressed(key)
     if key == 'h' then player.health = 5 end
 
     if key == 'j' then saveData.healing = saveData.healing + 1 end
+
+    if key == "l" then local result = love.filesystem.write("playerdump.txt", dump(player, ""), all) if not result then print("Failed to write dump file") end end
+    
+    if key == "p" then
+        local mask = player.collider.collision_class 
+        print(player.x, player.y, player.collider:getX(), player.collider:getY(), mask)
+        for k,v in ipairs(player.collider.world.masks[mask].masks) do
+            print(k,v)
+        end
+    end
 end
 
 function love.mousepressed(x, y, button)

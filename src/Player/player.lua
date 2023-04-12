@@ -1,5 +1,5 @@
 require('libraries/anim8')
-Timer = require('libraries/timer')
+--Timer = require('libraries/timer')
 player = {}
 boomerangs = {}
 
@@ -50,7 +50,7 @@ end
 function player.update(dt)
     playerMovement(dt)
 
-    Timer.update(dt)
+    --Timer.update(dt)
 
     boomerangTimer(dt)
     boomerangRotation(dt)
@@ -172,6 +172,7 @@ function throwBoomerang()
     boomerang.speed = 500
     boomerang.dead = false
     boomerang.state = 1
+    boomerang.timer = 0
 
     if facingRight then boomerang.direction = 1 end
     if facingLeft then boomerang.direction = 2 end
@@ -195,19 +196,22 @@ end
 
 function boomerangRotation(dt)
     if isThrowed == true then
-        boomRot = boomRot + 0.1
+        boomRot = boomRot + 6 * dt
     end
 end
 
 function boomerangTimer(dt)
     if isThrowed then
         for i, boomerang in ipairs(boomerangs) do
-            if boomerang.state == 1 then
-                Timer.after(1.2, function ()
-                boomerang.dead = true
-                boomRot = 0
-                end)
-            end
+            --if boomerang.state == 1 then
+                boomerang.timer = boomerang.timer + dt
+                if boomerang.timer > 1.2 then
+                    boomerang.dead = true
+                    boomRot = 0
+                end
+                --Timer.after(1.2, function ()
+                --end)
+            --end
         end
     end
 end

@@ -31,6 +31,8 @@ function createFire(x, y)
     fire.collider = world:newRectangleCollider(fire.x, fire.y, fire.w, fire.h)
     fire.collider:setType('static')
     fire.collider:setCollisionClass('Fire')
+    --fire.collider:setFilterData(3, 65535, 0)
+    --fire.collider:setCategory(5) -- 5: fire
     table.insert(fires, fire)
 end
 
@@ -44,6 +46,8 @@ function createCoin(x, y)
     coin.collider = world:newRectangleCollider(coin.x - 10, coin.y - 12, coin.w, coin.h)
     coin.collider:setType('static')
     coin.collider:setCollisionClass('Coin')
+    --coin.collider:setFilterData(2, 65535, 0)
+    --coin.collider:setCategory(2) -- 2: coin
     table.insert(coins, coin)
 end
 
